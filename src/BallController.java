@@ -1,6 +1,6 @@
 public class BallController {
     public Rect ballRect, leftPaddle, rightPaddle;
-    private double vy = 100.0; // y velocity
+    private double vy = 50.0; // y velocity
     private double vx = -100.0; // x velocity
 
     public BallController(Rect ballRect, Rect leftPaddle, Rect rightPaddle) {
@@ -18,16 +18,13 @@ public class BallController {
         this.ballRect.y += vy * deltaTime;
     }
 
-    private void flipXVelocity() {
-        this.vx *= -1;
-    }
     private void flipYVelocity() {
         this.vy *= -1;
     }
 
     private void checkHorizontalCollision() {
         // ball moving right
-        if(vx > 0 )
+        if(vx >= 0.0 )
         {
             // Check if ball has collided with the left edge of the right paddle
             // Check if ball has not passed the right paddle
@@ -35,7 +32,15 @@ public class BallController {
             if(this.ballRect.x + this.ballRect.width >= this.rightPaddle.x && this.ballRect.x <= this.rightPaddle.x + this.rightPaddle.width &&
                     this.ballRect.y >= this.rightPaddle.y && this.ballRect.y <= this.rightPaddle.y + this.rightPaddle.height)
             {
-                flipXVelocity();
+                // Use the calculated angle to get the new velocities
+                double theta = calculateNewVeloctiyAngle(this.rightPaddle);
+                double newVx = Math.abs((Math.cos(theta)) * Constants.BALL_SPEED);
+                double newVy = (-Math.sin(theta)) * Constants.BALL_SPEED;
+
+                // Set the velocities and flip the sign for the x
+                double oldSign = Math.signum(vx);
+                this.vx = newVx * (-1.0 * oldSign);
+                this.vy = newVy;
             }
             // Check if ball has passed the right paddle
             else if(this.ballRect.x + this.ballRect.width > this.rightPaddle.x + this.rightPaddle.width) {
@@ -43,7 +48,7 @@ public class BallController {
             }
         }
         // ball moving left
-        else if(vx < 0)
+        else if(vx < 0.0)
         {
             // Check if ball has collided with the right edge of the left paddle
             // Check if ball has not passed the left paddle
@@ -51,7 +56,17 @@ public class BallController {
             if(this.ballRect.x <= this.leftPaddle.x + this.leftPaddle.width && this.ballRect.x + this.ballRect.width >= this.leftPaddle.x &&
                     this.ballRect.y >= this.leftPaddle.y && this.ballRect.y  <= this.leftPaddle.y + this.leftPaddle.height)
             {
-                flipXVelocity();
+                double theta = calculateNewVeloctiyAngle(this.leftPaddle);
+
+                // Use the calculated angle to get the new velocities
+                double newVx = Math.abs((Math.cos(theta)) * Constants.BALL_SPEED);
+                double newVy = (-Math.sin(theta)) * Constants.BALL_SPEED;
+
+                // Set the velocities and flip the sign for the x
+                double oldSign = Math.signum(vx);
+                this.vx = newVx * (-1.0 * oldSign);
+                this.vy = newVy;
+
             }
             // Check if ball has passed the left paddle
             else if(this.ballRect.x + this.ballRect.width < this.leftPaddle.x ) {
@@ -75,6 +90,20 @@ public class BallController {
                 flipYVelocity();
             }
         }
+    }
+
+    public double calculateNewVeloctiyAngle(Rect paddle) {
+        // Calculate where in which half of the paddle the ball hit
+        // A positive value means it hit the top half, negative means it hit the bottom half
+        double relativeIntersectY = (paddle.y + (paddle.height / 2.0)) - (ballRect.y + (ballRect.height / 2.0));
+
+        // Normalize the intersection
+        double normalizedIntersectY = relativeIntersectY / (paddle.height / 2.0);
+
+        // Calculate a return angle
+        double theta = normalizedIntersectY * Constants.MAX_ANGLE;
+
+        return Math.toRadians(theta);
     }
 
 }
