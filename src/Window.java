@@ -7,8 +7,9 @@ public class Window extends JFrame implements Runnable{
     Graphics2D g2;
     KL keyListener = new KL();
     Rect player1, ai, ball;
-    Ball pong;
+    BallController ballController;
     PlayerController playerController;
+    AIController aiController;
 
     public Window() {
         // Window properties
@@ -28,12 +29,12 @@ public class Window extends JFrame implements Runnable{
 
         // Players and Ball
         player1 = new Rect(Constants.HZ_PADDING, 40, Constants.PADDLE_WIDTH, Constants.PADDLE_HEIGHT, Constants.PADDLE_COLOR);
-        playerController = new PlayerController(player1, keyListener);
-
         ai = new Rect(Constants.SCREEN_WIDTH - Constants.PADDLE_WIDTH - Constants.HZ_PADDING, 40, Constants.PADDLE_WIDTH, Constants.PADDLE_HEIGHT, Constants.PADDLE_COLOR);
         ball = new Rect(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, Constants.BALL_WIDTH, Constants.BALL_HEIGHT, Constants.BALL_COLOR);
-        pong = new Ball(ball, player1, ai);
 
+        playerController = new PlayerController(player1, keyListener);
+        ballController = new BallController(ball, player1, ai);
+        aiController = new AIController(new PlayerController(ai), ball);
     }
 
     public void update(double deltaTime) {
@@ -50,7 +51,8 @@ public class Window extends JFrame implements Runnable{
         g2.drawImage(dbImage, 0, 0, this);
 
         playerController.update(deltaTime);
-        pong.update(deltaTime);
+        aiController.update(deltaTime);
+        ballController.update(deltaTime);
     }
 
     public void draw(Graphics g) {

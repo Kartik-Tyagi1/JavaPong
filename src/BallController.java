@@ -1,9 +1,9 @@
-public class Ball {
+public class BallController {
     public Rect ballRect, leftPaddle, rightPaddle;
-    private double vy = 200.0; // y velocity
-    private double vx = -10.0; // x velocity
+    private double vy = 100.0; // y velocity
+    private double vx = -100.0; // x velocity
 
-    public Ball(Rect ballRect, Rect leftPaddle, Rect rightPaddle) {
+    public BallController(Rect ballRect, Rect leftPaddle, Rect rightPaddle) {
         this.ballRect = ballRect;
         this.leftPaddle = leftPaddle;
         this.rightPaddle = rightPaddle;
@@ -31,8 +31,8 @@ public class Ball {
         {
             // Check if ball has collided with the left edge of the right paddle
             // Check if ball has not passed the right paddle
-            // Check if the top of the ball is within the height range of the right paddle
-            if(this.ballRect.x >= this.rightPaddle.x + this.rightPaddle.width && this.ballRect.x + this.ballRect.width <= this.rightPaddle.x &&
+            // Check if the top of the ball is higher than bottom of paddle, and bottom of ball is lower than top of paddle
+            if(this.ballRect.x + this.ballRect.width >= this.rightPaddle.x && this.ballRect.x <= this.rightPaddle.x + this.rightPaddle.width &&
                     this.ballRect.y >= this.rightPaddle.y && this.ballRect.y <= this.rightPaddle.y + this.rightPaddle.height)
             {
                 flipXVelocity();
@@ -47,9 +47,9 @@ public class Ball {
         {
             // Check if ball has collided with the right edge of the left paddle
             // Check if ball has not passed the left paddle
-            // Check if the top of the ball is within the height range of the left paddle
+            // Check if the top of the ball is higher than bottom of paddle, and bottom of ball is lower than top of paddle
             if(this.ballRect.x <= this.leftPaddle.x + this.leftPaddle.width && this.ballRect.x + this.ballRect.width >= this.leftPaddle.x &&
-                    this.ballRect.y >= this.leftPaddle.y && this.ballRect.y <= this.leftPaddle.y + this.leftPaddle.height)
+                    this.ballRect.y >= this.leftPaddle.y && this.ballRect.y  <= this.leftPaddle.y + this.leftPaddle.height)
             {
                 flipXVelocity();
             }

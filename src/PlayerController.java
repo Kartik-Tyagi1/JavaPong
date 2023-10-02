@@ -9,12 +9,26 @@ public class PlayerController {
         this.keyListener = keyListener;
     }
 
-    public void update(double deltaTime) {
-        if(keyListener.isKeyPressed(KeyEvent.VK_UP)) {
-            rect.moveRectVertical(-Constants.PADDLE_MOVE_SPEED * deltaTime);
-        }
-        else if(keyListener.isKeyPressed(KeyEvent.VK_DOWN)) {
-            rect.moveRectVertical(Constants.PADDLE_MOVE_SPEED * deltaTime);
-        }
+    // AI Will not have a key listener
+    public PlayerController(Rect rect) {
+        this.rect = rect;
+        this.keyListener = null;
     }
+
+    public void update(double deltaTime) {
+        if(keyListener != null) {
+            if(keyListener.isKeyPressed(KeyEvent.VK_UP)) {
+                rect.moveRectVertical(-Constants.PADDLE_MOVE_SPEED * deltaTime);
+            }
+            else if(keyListener.isKeyPressed(KeyEvent.VK_DOWN)) {
+                rect.moveRectVertical(Constants.PADDLE_MOVE_SPEED * deltaTime);
+            }
+        }
+        else {
+
+        }
+
+    }
+
+
 }
