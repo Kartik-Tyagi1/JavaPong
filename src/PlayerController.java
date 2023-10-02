@@ -11,10 +11,10 @@ public class PlayerController {
 
     public void update(double deltaTime) {
         if(keyListener.isKeyPressed(KeyEvent.VK_UP)) {
-            rect.moveRect(-Constants.PADDLE_MOVE_SPEED * deltaTime);
+            rect.moveRectVertical(-Constants.PADDLE_MOVE_SPEED * deltaTime);
         }
         else if(keyListener.isKeyPressed(KeyEvent.VK_DOWN)) {
-            rect.moveRect(Constants.PADDLE_MOVE_SPEED * deltaTime);
+            rect.moveRectVertical(Constants.PADDLE_MOVE_SPEED * deltaTime);
         }
     }
 }

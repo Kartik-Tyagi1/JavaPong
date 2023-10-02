@@ -2,8 +2,8 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class Rect {
-    private double x, y;
-    private double width, height;
+    public double x, y;
+    public double width, height;
     private Color color;
 
     public Rect(double x, double y, double width, double height, Color color) {
@@ -19,7 +19,8 @@ public class Rect {
         g2.fill(new Rectangle2D.Double(x, y, width, height));
     }
 
-    public void moveRect(double dy) {
+    // Used for paddle movement
+    public void moveRectVertical(double dy) {
         if(this.y + dy + Constants.PADDLE_HEIGHT < Constants.SCREEN_HEIGHT - Constants.INSETS_BOTTOM && this.y + dy > Constants.TOOLBAR_HEIGHT) {
             this.y += dy;
         }
