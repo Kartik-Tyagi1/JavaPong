@@ -19,4 +19,11 @@ public class Constants {
 
     public static final double MAX_ANGLE = 45;
     public static final double BALL_SPEED = 200;
+
+    public static final int TEXT_YPOS = 70;
+    public static final int TEXT_SIZE = 40;
+    public static final int TEXT_HZ_PADDING = 15;
+
+    public static final int WIN_SCORE = 1;
+
 }

@@ -4,12 +4,16 @@ import java.awt.*;
 
 
 public class Window extends JFrame implements Runnable{
-    Graphics2D g2;
-    KL keyListener = new KL();
-    Rect player1, ai, ball;
-    BallController ballController;
-    PlayerController playerController;
-    AIController aiController;
+    public Graphics2D g2;
+    public KL keyListener = new KL();
+    public Rect player1, ai, ball;
+    public BallController ballController;
+    public PlayerController playerController;
+    public AIController aiController;
+    public Text leftScoreText, rightScoreText;
+    Font tnrFont = new Font("Times New Roman", Font.BOLD, Constants.TEXT_SIZE);
+
+
 
     public Window() {
         // Window properties
@@ -27,13 +31,17 @@ public class Window extends JFrame implements Runnable{
         g2 = (Graphics2D)this.getGraphics();
         this.addKeyListener(keyListener);
 
+        // Start score at 0
+        leftScoreText = new Text(Constants.TEXT_HZ_PADDING, Constants.TEXT_YPOS, tnrFont, Color.WHITE, 0);
+        rightScoreText = new Text(Constants.SCREEN_WIDTH - Constants.TEXT_HZ_PADDING - 16, Constants.TEXT_YPOS, tnrFont, Color.WHITE, 0);
+
         // Players and Ball
         player1 = new Rect(Constants.HZ_PADDING, 40, Constants.PADDLE_WIDTH, Constants.PADDLE_HEIGHT, Constants.PADDLE_COLOR);
         ai = new Rect(Constants.SCREEN_WIDTH - Constants.PADDLE_WIDTH - Constants.HZ_PADDING, 40, Constants.PADDLE_WIDTH, Constants.PADDLE_HEIGHT, Constants.PADDLE_COLOR);
         ball = new Rect(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, Constants.BALL_WIDTH, Constants.BALL_HEIGHT, Constants.BALL_COLOR);
 
         playerController = new PlayerController(player1, keyListener);
-        ballController = new BallController(ball, player1, ai);
+        ballController = new BallController(ball, player1, ai, leftScoreText, rightScoreText);
         aiController = new AIController(new PlayerController(ai), ball);
     }
 
@@ -51,7 +59,7 @@ public class Window extends JFrame implements Runnable{
         g2.drawImage(dbImage, 0, 0, this);
 
         playerController.update(deltaTime);
-        aiController.update(deltaTime);
+        //aiController.update(deltaTime);
         ballController.update(deltaTime);
     }
 
@@ -61,6 +69,9 @@ public class Window extends JFrame implements Runnable{
         // Background color
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+        leftScoreText.draw(g2);
+        rightScoreText.draw(g2);
 
         player1.drawRect(g2);
         ai.drawRect(g2);

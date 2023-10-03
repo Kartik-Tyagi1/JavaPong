@@ -2,11 +2,14 @@ public class BallController {
     public Rect ballRect, leftPaddle, rightPaddle;
     private double vy = 50.0; // y velocity
     private double vx = -100.0; // x velocity
+    private Text leftScoreText, rightScoreText;
 
-    public BallController(Rect ballRect, Rect leftPaddle, Rect rightPaddle) {
+    public BallController(Rect ballRect, Rect leftPaddle, Rect rightPaddle, Text leftScoreText, Text rightScoreText) {
         this.ballRect = ballRect;
         this.leftPaddle = leftPaddle;
         this.rightPaddle = rightPaddle;
+        this.leftScoreText = leftScoreText;
+        this.rightScoreText = rightScoreText;
     }
 
     public void update(double deltaTime) {
@@ -16,6 +19,29 @@ public class BallController {
         // Cannot use moveRect code here since that has extra conditions that do not apply to the ball
         this.ballRect.x += vx * deltaTime;
         this.ballRect.y += vy * deltaTime;
+
+        // Give right score if ball goes past the left paddle
+        if(this.ballRect.x + this.ballRect.width < this.leftPaddle.x) {
+
+            int rightScore = Integer.parseInt(rightScoreText.text);
+            rightScore++;
+            rightScoreText.text = "" + rightScore;
+            resetBallPostion();
+            if(rightScore >= Constants.WIN_SCORE) {
+                System.out.println("Right Player Won");
+            }
+        }
+
+        // Give left score if ball goes past right paddle
+        if(this.ballRect.x > this.rightPaddle.x + this.rightPaddle.width) {
+            int leftScore = Integer.parseInt(leftScoreText.text);
+            leftScore++;
+            leftScoreText.text = "" + leftScore;
+            resetBallPostion();
+            if(leftScore >= Constants.WIN_SCORE) {
+                System.out.println("Left Player Won");
+            }
+        }
     }
 
     private void flipYVelocity() {
@@ -42,10 +68,6 @@ public class BallController {
                 this.vx = newVx * (-1.0 * oldSign);
                 this.vy = newVy;
             }
-            // Check if ball has passed the right paddle
-            else if(this.ballRect.x + this.ballRect.width > this.rightPaddle.x + this.rightPaddle.width) {
-                System.out.println("Player gained a point");
-            }
         }
         // ball moving left
         else if(vx < 0.0)
@@ -67,10 +89,6 @@ public class BallController {
                 this.vx = newVx * (-1.0 * oldSign);
                 this.vy = newVy;
 
-            }
-            // Check if ball has passed the left paddle
-            else if(this.ballRect.x + this.ballRect.width < this.leftPaddle.x ) {
-                System.out.println("AI gained a point");
             }
         }
     }
@@ -104,6 +122,13 @@ public class BallController {
         double theta = normalizedIntersectY * Constants.MAX_ANGLE;
 
         return Math.toRadians(theta);
+    }
+
+    private void resetBallPostion() {
+        this.ballRect.x = Constants.SCREEN_WIDTH / 2.0;
+        this.ballRect.y = Constants.SCREEN_HEIGHT / 2.0;
+        this.vx = -100.0;
+        this.vy = 50.0;
     }
 
 }
