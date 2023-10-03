@@ -12,6 +12,7 @@ public class Window extends JFrame implements Runnable{
     public AIController aiController;
     public Text leftScoreText, rightScoreText;
     Font tnrFont = new Font("Times New Roman", Font.BOLD, Constants.TEXT_SIZE);
+    public boolean isRunning = true;
 
 
 
@@ -59,7 +60,7 @@ public class Window extends JFrame implements Runnable{
         g2.drawImage(dbImage, 0, 0, this);
 
         playerController.update(deltaTime);
-        //aiController.update(deltaTime);
+        aiController.update(deltaTime);
         ballController.update(deltaTime);
     }
 
@@ -78,10 +79,14 @@ public class Window extends JFrame implements Runnable{
         ball.drawRect(g2);
     }
 
+    public void stop() {
+        isRunning = false;
+    }
+
     @Override
     public void run() {
         double lastFrameTime = 0.0;
-        while (true) {
+        while (isRunning) {
             // Get time the frame has ended
             double time = Time.getTime();
 
@@ -93,5 +98,7 @@ public class Window extends JFrame implements Runnable{
 
             update(deltaTime);
         }
+        this.dispose();
+        return;
     }
 }

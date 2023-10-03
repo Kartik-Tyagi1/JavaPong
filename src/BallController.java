@@ -29,6 +29,7 @@ public class BallController {
             resetBallPostion();
             if(rightScore >= Constants.WIN_SCORE) {
                 System.out.println("Right Player Won");
+                Main.changeState(2);
             }
         }
 
@@ -40,6 +41,7 @@ public class BallController {
             resetBallPostion();
             if(leftScore >= Constants.WIN_SCORE) {
                 System.out.println("Left Player Won");
+                Main.changeState(2);
             }
         }
     }
